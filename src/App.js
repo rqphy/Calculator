@@ -22,6 +22,8 @@ function reducer(state, { type, payload })
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`
       }
+    case ACTIONS.CLEAR:
+      return {}
   }
 }
 
@@ -37,7 +39,7 @@ const App = () =>
         <div className="previous_operand">{currentOperand} {operation}</div>
         <div className="current_operand">{previousOperand}</div>
       </div>
-      <button className="span_two">AC</button>
+      <button className="span_two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
       <button>DEL</button>
       <OperationButton operation={"÷"} dispatch={dispatch} />
       <DigitButton digit={"1"} dispatch={dispatch} />
