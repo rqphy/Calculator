@@ -22,9 +22,65 @@ function reducer(state, { type, payload })
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`
       }
+
     case ACTIONS.CLEAR:
       return {}
+
+    case ACTIONS.CHOOSE_OPERATION:
+      if(state.currentOperand == null && state.previousOperand == null)
+      {
+        return state
+      }
+
+      if(currentOperand == null)
+      {
+        
+      }
+
+      if(state.previousOperand == null)
+      {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperand: state.currentOperand,
+          currentOperand: null
+        }
+      }
+
+      return {
+        ...state,
+        previousOperand: evaluate(state),
+        operation: payload.operation,
+        currentOperand: null
+      }
   }
+}
+
+function evaluate({ currentOperand, previousOperand, operation })
+{
+  const prev = parseFloat(previousOperand)
+  const current = parseFloat(currentOperand)
+
+  if(isNaN(prev) || isNaN(current)) return
+
+  let computation = ''
+  switch(operation)
+  {
+    case '+':
+      computation = prev + current
+      break
+    case '-':
+      computation = prev - current
+      break
+    case '*':
+      computation = prev * current
+      break
+    case '÷':
+      computation = prev / current
+      break
+  }
+
+  return computation.toString()
 }
 
 const App = () =>
@@ -36,8 +92,8 @@ const App = () =>
   return (
     <div className="calculator_grid">
       <div className="output">
-        <div className="previous_operand">{currentOperand} {operation}</div>
-        <div className="current_operand">{previousOperand}</div>
+        <div className="previous_operand">{previousOperand} {operation}</div>
+        <div className="current_operand">{currentOperand}</div>
       </div>
       <button className="span_two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
       <button>DEL</button>
@@ -45,7 +101,7 @@ const App = () =>
       <DigitButton digit={"1"} dispatch={dispatch} />
       <DigitButton digit={"2"} dispatch={dispatch} />
       <DigitButton digit={"3"} dispatch={dispatch} />
-      <OperationButton operation={"x"} dispatch={dispatch} />
+      <OperationButton operation={"*"} dispatch={dispatch} />
       <DigitButton digit={"4"} dispatch={dispatch} />
       <DigitButton digit={"5"} dispatch={dispatch} />
       <DigitButton digit={"6"} dispatch={dispatch} />
